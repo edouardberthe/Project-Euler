@@ -40,20 +40,22 @@ def get_primes(n):
         print('Primes saved until', n)
     return primes
 
-def decompose_rec(n, l, primes):
-    if n <= 1:
-        return l
-    p = primes.pop(0)
-    if n % p == 0:
-        counter = 0
-        while n % p == 0:
-            n /= p
-            counter +=1
-        l += [(p, counter)]
-        return decompose_rec(n, l, primes)
-
 def decompose(n):
-    return decompose_rec(n, [], get_primes(n))
+    primes = get_primes(n)
+    if n <= 1:
+        return {}
+    d = {}
+    for prime in primes:
+        first = True
+        while n % prime == 0:
+            if first:
+                d[prime] = 1
+                first = False
+            else:
+                d[prime] += 1
+            n /= prime
+    return d
+
 
 def is_palindrome(n):
     s = str(n)
@@ -64,3 +66,11 @@ def is_palindrome(n):
             return False
     return True
 
+
+def divisors(n):
+    d = decompose(n)
+    res = 1
+    for prime, exp in d.items():
+        res *= exp+1
+    return res - 1
+    
